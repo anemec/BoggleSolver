@@ -7,3 +7,7 @@ The project is implemented in Java and uses JavaFX to create a GUI.
 ### Initial screen
 
 ![Initial screen](https://github.com/anemec/BoggleSolver/blob/master/BoggleSolverInitial.png "Initial screen")
+
+### Correct guess
+
+![Correct guess](https://github.com/anemec/BoggleSolver/blob/master/CorrectGuess.png "Correct guess")
