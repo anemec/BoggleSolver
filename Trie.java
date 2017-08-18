@@ -10,10 +10,6 @@ public class Trie {
     private static TrieElem root = new TrieElem();
     private static Trie INSTANCE;
 
-    /*
-        Creates a new trie and loads it with words from the dictionary
-     */
-
     public static Trie getInstance() {
         return INSTANCE;
     }
@@ -35,15 +31,11 @@ public class Trie {
 
         Scanner input = new Scanner(new File("bigDictionary.txt"));
 
-        //String answer = input.nextLine();
-        //System.out.println(answer);
-
         while (input.hasNext()) {
 
             word = input.nextLine();
 
             addWordToSubtrie(word);
-            //System.out.println(word + " added to trie");
         }
 
     }
@@ -71,19 +63,8 @@ public class Trie {
     public static boolean findWord(String word) {
         word = word.toLowerCase();
         char[] wordArr = word.toCharArray();
-        System.out.println("Found " + word);
 
         TrieElem current = root;
-
-        /*
-        for (char c : word.toCharArray()) {
-            if (current.find(c, )) {
-                current = current.trieElemAt(c);
-            } else {
-                return false;
-            }
-        }
-        */
 
         for (int i = 0; i < wordArr.length; i++) {
             if (current.find(wordArr[i], i == wordArr.length - 1)) {
@@ -100,7 +81,6 @@ public class Trie {
     public static boolean findPartialWord(String word) {
         word = word.toLowerCase();
         char[] wordArr = word.toCharArray();
-        System.out.println("Found partial word " + word);
 
         TrieElem current = root;
 

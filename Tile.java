@@ -12,9 +12,14 @@ public class Tile extends Rectangle {
     Tile eastTile = null;
     Tile southTile = null;
     Tile westTile = null;
+    Tile nwTile = null;
+    Tile neTile = null;
+    Tile seTile = null;
+    Tile swTile = null;
 
     private String letter;
     private int x, y;
+    private boolean isCurrentTile = false;
 
     public String getLetter() {
         return letter;
@@ -41,14 +46,19 @@ public class Tile extends Rectangle {
 
     }
 
+    public void setIsCurrent(boolean b) {
+        isCurrentTile = b;
+    }
+
+    public boolean isCurrent() {
+        return isCurrentTile;
+    }
+
     public Tile getNorthTile() {
         return northTile;
     }
 
     public void setNorthTile(Tile northTile) {
-        System.out.println();
-        System.out.println("North tile set");
-        System.out.println("Tile " + getLetter() + " North tile " + northTile.getLetter());
         this.northTile = northTile;
     }
 
@@ -73,23 +83,60 @@ public class Tile extends Rectangle {
     }
 
     public void setWestTile(Tile westTile) {
-        System.out.println();
-        System.out.println("West tile set");
-        System.out.println("Tile " + getLetter() + " West tile " + westTile.getLetter());
-
         this.westTile = westTile;
+    }
+
+    public Tile getNwTile() {
+        return nwTile;
+    }
+
+    public void setNwTile(Tile nwTile) {
+        this.nwTile = nwTile;
+    }
+
+    public Tile getNeTile() {
+        return neTile;
+    }
+
+    public void setNeTile(Tile neTile) {
+        this.neTile = neTile;
+    }
+
+    public Tile getSeTile() {
+        return seTile;
+    }
+
+    public void setSeTile(Tile seTile) {
+        this.seTile = seTile;
+    }
+
+    public Tile getSwTile() {
+        return swTile;
+    }
+
+    public void setSwTile(Tile swTile) {
+        this.swTile = swTile;
     }
 
     public List<Tile> getNieghbors() {
         List<Tile> list = new ArrayList<>();
         if (northTile != null)
             list.add(northTile);
+        if (neTile != null)
+            list.add(neTile);
         if (eastTile != null)
             list.add(eastTile);
+        if (seTile != null)
+            list.add(seTile);
         if (southTile != null)
             list.add(southTile);
+        if (swTile != null)
+            list.add(swTile);
         if (westTile != null)
             list.add(westTile);
+        if (nwTile != null)
+            list.add(nwTile);
+
         return list;
     }
 }

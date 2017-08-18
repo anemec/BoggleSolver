@@ -8,7 +8,6 @@ public class TrieElem {
 
     private Character letter = null;
     private boolean isEnd;
-    //Could just be array of size 26
     private List<TrieElem> subtrie = new ArrayList<>();
 
     public TrieElem() {

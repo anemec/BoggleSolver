@@ -11,63 +11,67 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static java.util.Arrays.*;
+import java.util.List;
+
 
 public class BoggleApp extends Application {
 
-    private static final int WIDTH = 5;
-    private static final int HEIGHT = 5;
-
     private Group tileGroupBoard;
     private Group buttonGroup = new Group();
+    private Group textGroup = new Group();
+    private Group listViewGroup = new Group();
+
+    private Integer score = 0;
 
 
     private Parent initialCreate() throws FileNotFoundException {
         Pane root = new Pane();
         Board board = new Board();
-        //Trie trie = new Trie();
-        //trie.createTrie();
-
-        //System.out.println(trie.findWord("aa"));
 
         root.setPrefSize(800, 750);
-        //fillArray();
-        //createGrid();
         tileGroupBoard = board.getTileGroup();
 
         //Text
-        Text isWordFound = new Text(600, 150, " ");
+        Text isWordFound = new Text(550, 100, " ");
+        Text wordsFoundSoFar = new Text(550, 150, "Words found so far");
+        Text playerOneScore = new Text(100, 550, "Player score:     " + score.toString());
+        textGroup.getChildren().addAll(isWordFound, wordsFoundSoFar, playerOneScore);
 
         //ListView
         ListView<String> listView = new ListView<>();
+        ListView<String> solvedListView = new ListView<>();
+
         ObservableList<String> items = FXCollections.observableArrayList();
+        ObservableList<String> solveItems = FXCollections.observableArrayList();
+
         listView.setItems(items);
-        listView.setPrefSize(100, 70);
-        listView.relocate(600, 300);
+        listView.setPrefSize(150, 100);
+        listView.relocate(550, 165);
+
+        solvedListView.setItems(solveItems);
+        solvedListView.setPrefSize(150, 100);
+        solvedListView.relocate(550, 400);
+
+        listViewGroup.getChildren().addAll(listView, solvedListView);
 
         //Buttons
         Button solveButton = new Button("Solve");
         Button guessButton = new Button("Guess");
         Button resetButton = new Button("Reset Guess");
-        solveButton.relocate(600, 200);
-        guessButton.relocate(600, 100);
-        resetButton.relocate(700, 100);
+        solveButton.relocate(550, 350);
+        guessButton.relocate(550, 50);
+        resetButton.relocate(625, 50);
 
         solveButton.setOnMouseClicked(e -> {
-            List<String> solverResults = Board.solverResults();
-            Board.solveBoard();
+            List<String> solverResults = board.solverResults();
+            // List<String> solverResults = Board.solverResults();
+            board.solveBoard();
+            //Board.solveBoard();
 
             for (String s : solverResults) {
-                items.add(s);
-                listView.setItems(items);
+                solveItems.add(s.toLowerCase());
+                solvedListView.setItems(solveItems);
             }
 
         });
@@ -76,34 +80,45 @@ public class BoggleApp extends Application {
             String guessedWord = board.getGuessWord();
             boolean isFound = Trie.findWord(guessedWord);
             System.out.println("Word to guess is " + guessedWord);
-            isWordFound.setText(String.valueOf(isFound));
-            if (isFound) {
-                items.add(guessedWord);
-                listView.setItems(items);
+            if (guessedWord.length() == 0) {
+                isWordFound.setText("Please use the board to enter a word");
+            } else if (!items.contains(guessedWord.toLowerCase())) {
+                isWordFound.setText("Word " + guessedWord + " found: " + String.valueOf(isFound));
+                if (isFound) {
+                    items.add(guessedWord.toLowerCase());
+                    listView.setItems(items);
+                    calculateScore(guessedWord);
+                    playerOneScore.setText("Player score:     " + score.toString());
+                }
+            } else {
+                isWordFound.setText(guessedWord + " already found");
             }
 
         });
 
         resetButton.setOnMouseClicked(e -> {
             board.reset();
+            isWordFound.setText(" ");
         });
 
+        buttonGroup.getChildren().addAll(solveButton, guessButton, resetButton);
 
-
-
-
-
-
-
-        buttonGroup.getChildren().addAll(solveButton, guessButton, resetButton,listView, isWordFound);
-
-
-        //Text text = new Text(10, 20, "Hello");
-        //root.getChildren().add(text);
-        //root.getChildren().addAll(tileGroup);
-        root.getChildren().addAll(tileGroupBoard, buttonGroup);
+        root.getChildren().addAll(tileGroupBoard, buttonGroup, textGroup, listViewGroup);
 
         return root;
+    }
+
+    private void calculateScore(String word) {
+        if (word.length() == 3 || word.length() == 4)
+            score += 1;
+        if (word.length() == 5)
+            score += 2;
+        if (word.length() == 6)
+            score += 3;
+        if (word.length() == 7)
+            score += 5;
+        if (word.length() >= 8)
+            score += 11;
     }
 
 

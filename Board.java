@@ -1,10 +1,8 @@
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
 public class Board {
 
@@ -13,6 +11,7 @@ public class Board {
     private Group tileGroup = new Group();
     private static StringBuilder guessWord = new StringBuilder();
     private static Solver solver;
+    private static Stack<Tile> guessStack = new Stack<>();
 
     private String[][] dice = {{ "N", "S", "C", "T", "E", "C" },
             { "A", "E", "A", "E", "E", "E" },
@@ -52,11 +51,11 @@ public class Board {
 
     }
 
-    public static void solveBoard() {
+    public void solveBoard() {
         solver.printResultsToCLI();
     }
 
-    public static List<String> solverResults() {
+    public List<String> solverResults() {
         return solver.getResults();
     }
 
@@ -66,7 +65,7 @@ public class Board {
             for (int x = 0; x < WIDTH; x++) {
                 Random rand = new Random();
                 int randNumi = randNumArr[i];
-                int randNumj = rand.nextInt(5);
+                int randNumj = rand.nextInt(6);
 
                 String letter = dice[randNumi][randNumj];
                 boardArr[y][x] = letter;
@@ -102,6 +101,14 @@ public class Board {
         }
     }
 
+    public static Stack<Tile> getGuessStack() {
+        return guessStack;
+    }
+
+    public static void addGuessStack(Tile t) {
+        guessStack.push(t);
+    }
+
     public static void setGuessWord(String letter) {
         guessWord.append(letter);
     }
@@ -121,6 +128,8 @@ public class Board {
             }
         }
         guessWord.delete(0, guessWord.length());
+        //guessWord = null;
+        guessStack.clear();
     }
 
     private void setNeighbors() {
@@ -128,14 +137,26 @@ public class Board {
             for (int j = 0; j < HEIGHT; j++) {
                 if (i > 0)
                     tileBoard[i][j].getTile().setNorthTile(tileBoard[i - 1][j].getTile());
+                if (i > 0 && j < HEIGHT - 1)
+                    tileBoard[i][j].getTile().setNeTile(tileBoard[i - 1][j + 1].getTile());
+                if (i > 0 && j > 0)
+                    tileBoard[i][j].getTile().setNwTile(tileBoard[i - 1][j - 1].getTile());
                 if (i < HEIGHT - 1)
                     tileBoard[i][j].getTile().setSouthTile(tileBoard[i + 1][j].getTile());
+                if (i < HEIGHT - 1 && j < HEIGHT - 1)
+                    tileBoard[i][j].getTile().setSeTile(tileBoard[i + 1][j + 1].getTile());
+                if (i < HEIGHT - 1 && j > 0)
+                    tileBoard[i][j].getTile().setSwTile(tileBoard[i + 1][j - 1].getTile());
                 if (j > 0)
                     tileBoard[i][j].getTile().setWestTile(tileBoard[i][j - 1].getTile());
                 if (j < HEIGHT - 1)
                     tileBoard[i][j].getTile().setEastTile(tileBoard[i][j + 1].getTile());
             }
         }
+    }
+
+    public static int getSize() {
+        return HEIGHT;
     }
 
 
